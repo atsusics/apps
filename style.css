@@ -1,0 +1,43 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 20px;
+  line-height: 1.8;
+  color: #222;
+  background: #fafaf8;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  border-left: 3px solid #4CAF50;
+  padding-left: 10px;
+}
+
+h3 {
+  margin-top: 32px;
+}
+
+p, li {
+  font-size: 0.95rem;
+}
+
+ul {
+  padding-left: 1.4rem;
+}
+
+a {
+  color: #4CAF50;
+}
+
+.updated {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 2rem;
+}
