@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garlic Breath Meter - How many hours until it's gone?</title>
+  <meta name="description" content="Predict your garlic breath score and the time until it fades, based on what you ate. Just log raw or cooked garlic intake to see whether the smell will be gone before your next meeting.">
+  <meta property="og:title" content="Garlic Breath Meter - How many hours until it's gone?">
+  <meta property="og:description" content="Predict your garlic breath score and the time until it fades. Know whether the smell will clear before your next meeting.">
+  <meta property="og:type" content="website">
+  <link rel="alternate" hreflang="ja" href="/garlic-breath-meter/ja/lp/">
+  <link rel="alternate" hreflang="en" href="/garlic-breath-meter/en/lp/">
+  <link rel="alternate" hreflang="x-default" href="/garlic-breath-meter/ja/lp/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #FBF7EC;
+      --bg-elevated: #FFFFFF;
+      --accent-brown: #9A7B43;
+      --accent-brown-deep: #6E5628;
+      --accent-red: #C73E1D;
+      --accent-green: #5C8A5C;
+      --accent-cream: #F2E9D4;
+      --accent-ivory: #FFF9EA;
+      --text-primary: #2B1F10;
+      --text-secondary: #7A6A52;
+      --border-soft: rgba(43, 31, 16, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .lang-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      gap: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 4px;
+      box-shadow: 0 4px 14px rgba(43,31,16,0.08);
+    }
+
+    .lang-switch a {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lang-switch a.active {
+      background: var(--accent-brown);
+      color: var(--bg-elevated);
+    }
+
+    .lang-switch a:not(.active):hover { color: var(--accent-brown-deep); }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(154,123,67,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(199,62,29,0.08) 0%, transparent 50%),
+        var(--bg-primary);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 12% 24%, rgba(154,123,67,0.18) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 32% 64%, rgba(154,123,67,0.12) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 52% 14%, rgba(154,123,67,0.14) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 72% 44%, rgba(154,123,67,0.1) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 92% 72%, rgba(154,123,67,0.12) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 28px;
+      background: var(--bg-elevated);
+      border: 3px solid var(--accent-brown);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(154,123,67,0.22);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+      color: var(--accent-brown-deep);
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700;
+      color: var(--accent-red);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-description {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent-brown);
+      color: var(--bg-elevated);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 4px 20px rgba(154,123,67,0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      background: var(--accent-brown-deep);
+      box-shadow: 0 6px 28px rgba(154,123,67,0.42);
+    }
+
+    .cta-button svg { width: 24px; height: 24px; }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-soft);
+    }
+
+    section { padding: 80px 20px; }
+    .section-inner { max-width: 960px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-brown);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--accent-brown-deep);
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(154,123,67,0.4);
+      box-shadow: 0 10px 28px rgba(154,123,67,0.12);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .feature-icon.brown  { background: rgba(154,123,67,0.18); }
+    .feature-icon.red    { background: rgba(199,62,29,0.14); }
+    .feature-icon.green  { background: rgba(92,138,92,0.16); }
+    .feature-icon.cream  { background: rgba(242,233,212,0.9); }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--accent-brown-deep);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .how-section {
+      background: linear-gradient(180deg, rgba(154,123,67,0.08) 0%, transparent 100%);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+
+    .step { text-align: center; position: relative; }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-brown);
+      color: var(--bg-elevated);
+      font-size: 1.4rem;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(154,123,67,0.28);
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--accent-brown-deep);
+    }
+
+    .step p { font-size: 0.88rem; color: var(--text-secondary); }
+
+    .screenshots-section { text-align: center; }
+
+    .screenshots-scroll {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .screenshot-frame {
+      width: 220px;
+      height: 440px;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-soft);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(43,31,16,0.08);
+    }
+
+    .screenshot-frame .emoji { font-size: 44px; }
+
+    .screenshot-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 22px;
+    }
+
+    .screenshot-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      text-align: center;
+    }
+
+    .highlight {
+      padding: 24px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+    }
+
+    .highlight-value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent-brown);
+      line-height: 1.2;
+    }
+
+    .highlight-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .final-cta {
+      text-align: center;
+      padding: 100px 20px;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(154,123,67,0.16) 0%, transparent 60%),
+        var(--bg-primary);
+    }
+
+    .final-cta h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--accent-brown-deep);
+    }
+
+    .final-cta p {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+    }
+
+    footer a { color: var(--accent-brown); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 56px 16px; }
+      .hero { min-height: 90vh; padding: 32px 16px; }
+      .hero-icon {
+        width: 96px;
+        height: 96px;
+        font-size: 52px;
+        border-radius: 22px;
+      }
+      .hero-badges { flex-wrap: wrap; justify-content: center; }
+      .screenshot-frame { width: 160px; height: 320px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .lang-switch { top: 12px; right: 12px; }
+      .lang-switch a { padding: 5px 10px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="lang-switch" aria-label="Language">
+    <a href="/garlic-breath-meter/ja/lp/">日本語</a>
+    <a href="/garlic-breath-meter/en/lp/" class="active">EN</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-icon">🧄</div>
+    <h1>Garlic Breath Meter</h1>
+    <p class="hero-tagline">How many hours until it's gone?</p>
+    <p class="hero-description">
+      Predict your garlic breath score and the time until it fades, based on what you ate. Know at a glance whether you'll be clear before your next meeting.
+    </p>
+    <a href="https://apps.apple.com/us/app/id6760191220" class="cta-button">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+    <div class="hero-badges">
+      <span class="hero-badge">Free</span>
+      <span class="hero-badge">No IAP</span>
+      <span class="hero-badge">iOS 17+</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-inner">
+      <p class="section-label">Features</p>
+      <h2 class="section-title">Don't let garlic ruin your next plan</h2>
+      <p class="section-subtitle">Just log what you ate. The app tells you when the smell will be gone.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon brown">🧄</div>
+          <h3>One-tap Logging</h3>
+          <p>Pick cloves for raw garlic or spoons for cooked. Logging takes just a few taps.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon red">📊</div>
+          <h3>Odor Score</h3>
+          <p>A real-time number from your intake and elapsed time. Danger levels trigger an alert.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon brown">⏱️</div>
+          <h3>Time-to-Clear</h3>
+          <p>Auto-calculated hours until you're odorless. Know at a glance if you'll make it to your next meeting.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon green">🥛</div>
+          <h3>Countermeasure Tips</h3>
+          <p>Milk, apple juice, green tea, tooth brushing. The app recommends the right fix for your current level.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon cream">📅</div>
+          <h3>Calendar History</h3>
+          <p>Look back on your garlic life in a calendar view. Every intake, one tap away.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon brown">🔒</div>
+          <h3>Fully On-device</h3>
+          <p>All data lives on your phone. No account, no server, no tracking of your eating habits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="section-inner">
+      <p class="section-label">How to Use</p>
+      <h2 class="section-title">Four simple steps</h2>
+      <p class="section-subtitle">Eat, log, and let the app do the rest.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Eat garlic</h3>
+          <p>Dumplings, ramen, aglio e olio — enjoy today's garlic meal.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Log the amount</h3>
+          <p>Pick the number of cloves or spoons. A few taps and you're done.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Check your score</h3>
+          <p>See your current odor score and the time you'll be clear.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Take action</h3>
+          <p>If you're in the danger zone, follow the recommended countermeasure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screenshots-section">
+    <div class="section-inner">
+      <p class="section-label">Screenshots</p>
+      <h2 class="section-title">Inside the app</h2>
+      <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">A peek at the real screens.</p>
+
+      <div class="screenshots-scroll">
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">📊</span>
+            <span>Home</span>
+          </div>
+          <p class="screenshot-label">Odor score</p>
+        </div>
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">🧄</span>
+            <span>Log screen</span>
+          </div>
+          <p class="screenshot-label">Log intake</p>
+        </div>
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">📅</span>
+            <span>Calendar</span>
+          </div>
+          <p class="screenshot-label">History</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-inner">
+      <div class="highlights">
+        <div class="highlight">
+          <div class="highlight-value">$0</div>
+          <div class="highlight-label">Free, no in-app purchases</div>
+        </div>
+        <div class="highlight">
+          <div class="highlight-value">3 taps</div>
+          <div class="highlight-label">To log an intake</div>
+        </div>
+        <div class="highlight">
+          <div class="highlight-value">100%</div>
+          <div class="highlight-label">Data stays on device</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>Don't let garlic ruin tomorrow</h2>
+    <p>Enjoy today's garlic. Leave the rest to the app.</p>
+    <a href="https://apps.apple.com/us/app/id6760191220" class="cta-button">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="/garlic-breath-meter/en/privacy/">Privacy Policy</a>
+      <a href="mailto:atsusics@gmail.com">Contact</a>
+    </div>
+    <p>&copy; 2026 Atsushi Oshima</p>
+  </footer>
+
+</body>
+</html>
