@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suubo - Vacuum the world into the stars</title>
+  <meta name="description" content="Control Suubo the cleaning robot, suck up everything smaller than yourself, and grow from a paperclip to a galaxy in this 3-minute casual game.">
+  <meta property="og:title" content="Suubo - Vacuum the world into the stars">
+  <meta property="og:description" content="Grow from a paperclip to a galaxy. A 3-minute casual game where you vacuum up the world at real scale.">
+  <meta property="og:type" content="website">
+  <link rel="alternate" hreflang="ja" href="/suubo/ja/lp/">
+  <link rel="alternate" hreflang="en" href="/suubo/en/lp/">
+  <link rel="alternate" hreflang="x-default" href="/suubo/ja/lp/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #070B18;
+      --bg-elevated: #0C1220;
+      --accent-cyan: #3DD6C8;
+      --accent-cyan-deep: #1FA59A;
+      --accent-purple: #9B5DE5;
+      --accent-orange: #FF6B35;
+      --text-primary: #E2EEF5;
+      --text-secondary: #617D94;
+      --border-soft: rgba(61, 214, 200, 0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .lang-switch {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      gap: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 4px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .lang-switch a {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .lang-switch a.active {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+    }
+
+    .lang-switch a:not(.active):hover { color: var(--accent-cyan); }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(61,214,200,0.16) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(155,93,229,0.10) 0%, transparent 50%),
+        var(--bg-primary);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 8% 18%, rgba(61,214,200,0.22) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,0.14) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 44% 12%, rgba(155,93,229,0.20) 0%, transparent 100%),
+        radial-gradient(1px 1px at 62% 38%, rgba(255,255,255,0.12) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 80% 70%, rgba(61,214,200,0.16) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 24%, rgba(255,255,255,0.10) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 28px;
+      background: var(--bg-elevated);
+      border: 3px solid var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(61,214,200,0.22);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+      color: var(--accent-cyan);
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700;
+      color: var(--accent-purple);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-description {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 4px 20px rgba(61,214,200,0.30);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      background: var(--accent-cyan-deep);
+      box-shadow: 0 6px 28px rgba(61,214,200,0.42);
+    }
+
+    .cta-button svg { width: 24px; height: 24px; }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-badge {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-soft);
+    }
+
+    section { padding: 80px 20px; }
+    .section-inner { max-width: 960px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(61,214,200,0.35);
+      box-shadow: 0 10px 28px rgba(61,214,200,0.10);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .feature-icon.cyan   { background: rgba(61,214,200,0.18); }
+    .feature-icon.purple { background: rgba(155,93,229,0.18); }
+    .feature-icon.orange { background: rgba(255,107,53,0.16); }
+    .feature-icon.blue   { background: rgba(69,123,157,0.18); }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .how-section {
+      background: linear-gradient(180deg, rgba(61,214,200,0.06) 0%, transparent 100%);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+
+    .step { text-align: center; position: relative; }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+      font-size: 1.4rem;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(61,214,200,0.28);
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .step p { font-size: 0.88rem; color: var(--text-secondary); }
+
+    .screenshots-section { text-align: center; }
+
+    .screenshots-scroll {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .screenshot-frame {
+      width: 220px;
+      height: 440px;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-soft);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    }
+
+    .screenshot-frame .emoji { font-size: 44px; }
+
+    .screenshot-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      text-align: center;
+    }
+
+    .highlight {
+      padding: 24px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+    }
+
+    .highlight-value {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      line-height: 1.2;
+    }
+
+    .highlight-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .final-cta {
+      text-align: center;
+      padding: 100px 20px;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(61,214,200,0.12) 0%, transparent 60%),
+        var(--bg-primary);
+    }
+
+    .final-cta h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--accent-cyan);
+    }
+
+    .final-cta p {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 20px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+    }
+
+    footer a { color: var(--accent-cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 56px 16px; }
+      .hero { min-height: 90vh; padding: 32px 16px; }
+      .hero-icon {
+        width: 96px;
+        height: 96px;
+        font-size: 52px;
+        border-radius: 22px;
+      }
+      .hero-badges { flex-wrap: wrap; justify-content: center; }
+      .screenshot-frame { width: 160px; height: 320px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .lang-switch { top: 12px; right: 12px; }
+      .lang-switch a { padding: 5px 10px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="lang-switch" aria-label="Language">
+    <a href="/suubo/ja/lp/">日本語</a>
+    <a href="/suubo/en/lp/" class="active">EN</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-icon">🤖</div>
+    <h1>Suubo</h1>
+    <p class="hero-tagline">Vacuum the world into the stars</p>
+    <p class="hero-description">
+      Control Suubo the cleaning robot, suck up everything smaller than yourself, and grow from a paperclip to a galaxy. A 3-minute casual game set across 8 worlds at real scale.
+    </p>
+    <!-- TODO: Replace with actual App Store URL once available -->
+    <a href="#" class="cta-button">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+    <div class="hero-badges">
+      <span class="hero-badge">Free</span>
+      <span class="hero-badge">No IAP</span>
+      <span class="hero-badge">iOS 18+</span>
+      <span class="hero-badge">Ads</span>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label">Features</p>
+      <h2 class="section-title">One hand. Eight worlds. Real scale.</h2>
+      <p class="section-subtitle">Suck up the world around you and grow. From your bedroom to the multiverse — all in 3 minutes.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon cyan">🕹️</div>
+          <h3>One-handed Floating Joystick</h3>
+          <p>Play with one thumb, anywhere. Press anywhere on the screen to spawn the floating joystick and steer Suubo with ease.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon purple">🌍</div>
+          <h3>Real-scale Journey</h3>
+          <p>Paperclip → chair → car → building → mountain → planet → galaxy. Every world is connected at true scale in one seamless universe.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon orange">🌌</div>
+          <h3>8 Worlds</h3>
+          <p>Room, garden, city, Japan, Earth, space, galaxy, multiverse. Suubo grows through every one of them as you vacuum up the cosmos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon blue">⏱️</div>
+          <h3>3-Minute Runs</h3>
+          <p>Quick, sharp, replayable. A 3-minute timer keeps every session tight and satisfying — perfect for a spare moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW TO PLAY ===== -->
+  <section class="how-section">
+    <div class="section-inner">
+      <p class="section-label">How to Play</p>
+      <h2 class="section-title">Four simple steps</h2>
+      <p class="section-subtitle">Suck, grow, and reach for the stars.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Move with the joystick</h3>
+          <p>Press anywhere on the screen to spawn the floating joystick. Steer Suubo around the world.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Suck up smaller things</h3>
+          <p>Get close to anything smaller than Suubo and it gets absorbed automatically. Keep growing.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Move through worlds</h3>
+          <p>When you've maxed out in your current world, the next one opens. Push through all 8.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Beat the clock</h3>
+          <p>You have 3 minutes. How far into the universe can Suubo reach?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCREENSHOTS ===== -->
+  <section class="screenshots-section">
+    <div class="section-inner">
+      <p class="section-label">Screenshots</p>
+      <h2 class="section-title">Inside the game</h2>
+      <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">A peek at the real screens.</p>
+
+      <div class="screenshots-scroll">
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">🤖</span>
+            <span>Gameplay</span>
+          </div>
+          <p class="screenshot-label">In action</p>
+        </div>
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">🌍</span>
+            <span>Growing</span>
+          </div>
+          <p class="screenshot-label">Scale up</p>
+        </div>
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">🌌</span>
+            <span>Space world</span>
+          </div>
+          <p class="screenshot-label">Into space</p>
+        </div>
+        <div>
+          <div class="screenshot-frame">
+            <span class="emoji">✨</span>
+            <span>Clear</span>
+          </div>
+          <p class="screenshot-label">Run complete</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HIGHLIGHTS ===== -->
+  <section>
+    <div class="section-inner">
+      <div class="highlights">
+        <div class="highlight">
+          <div class="highlight-value">8</div>
+          <div class="highlight-label">Worlds to explore</div>
+        </div>
+        <div class="highlight">
+          <div class="highlight-value">3 min</div>
+          <div class="highlight-label">Per run</div>
+        </div>
+        <div class="highlight">
+          <div class="highlight-value">$0</div>
+          <div class="highlight-label">Free, no in-app purchases</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final-cta">
+    <h2>Vacuum the universe</h2>
+    <p>Start in your bedroom. End in the multiverse.</p>
+    <!-- TODO: Replace with actual App Store URL once available -->
+    <a href="#" class="cta-button">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      Download on the App Store
+    </a>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-links">
+      <a href="/suubo/en/privacy/">Privacy Policy</a>
+      <a href="mailto:atsusics@gmail.com">Contact</a>
+    </div>
+    <p>&copy; 2026 Atsushi Oshima</p>
+  </footer>
+
+</body>
+</html>
